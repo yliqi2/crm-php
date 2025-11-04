@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 30-10-2025 a las 19:27:02
+-- Tiempo de generación: 04-11-2025 a las 20:07:32
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -49,7 +49,7 @@ CREATE TABLE `oportunidad` (
   `titulo` varchar(100) NOT NULL,
   `descripcion` varchar(250) NOT NULL,
   `valor_estimado` double(10,2) NOT NULL,
-  `estado` enum('progreso','ganada','perdida') NOT NULL,
+  `estado` enum('progreso','ganada','perdida') NOT NULL DEFAULT 'progreso',
   `f_creacion` date NOT NULL DEFAULT current_timestamp(),
   `usuario_responsable` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -64,8 +64,8 @@ CREATE TABLE `tareas` (
   `id_tarea` int(11) NOT NULL,
   `id_oportunidad` int(11) NOT NULL,
   `descripcion` varchar(250) NOT NULL,
-  `fecha` date NOT NULL,
-  `estado` enum('pendiente','completada') NOT NULL
+  `fecha` date NOT NULL DEFAULT current_timestamp(),
+  `estado` enum('pendiente','completada') NOT NULL DEFAULT 'pendiente'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -76,11 +76,19 @@ CREATE TABLE `tareas` (
 
 CREATE TABLE `usuario` (
   `id_usuario` int(11) NOT NULL,
-  `nombre_completo` int(100) NOT NULL,
+  `nombre_completo` varchar(100) NOT NULL,
   `email` varchar(75) NOT NULL,
   `contra` varchar(100) NOT NULL,
-  `isAdmin` tinyint(1) NOT NULL DEFAULT 0
+  `role` enum('admin','vendedor') NOT NULL DEFAULT 'vendedor'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `usuario`
+--
+
+INSERT INTO `usuario` (`id_usuario`, `nombre_completo`, `email`, `contra`, `role`) VALUES
+(1, 'asd', 'a@gmail.com', '$2y$10$oUH8yck6HRkOXk7iyNPxyu3yDbM/.BmxBl5.fZQ/A3/uaSJjfT4/2', ''),
+(2, 'Liqiang Yang', 'b@gmail.com', '$2y$10$SrwSZyA.C/kZ4MZvyokhCu0mK3aPJS3iaEDx9y5IwoDY5kglH337.', '');
 
 --
 -- Índices para tablas volcadas
@@ -142,7 +150,7 @@ ALTER TABLE `tareas`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Restricciones para tablas volcadas
