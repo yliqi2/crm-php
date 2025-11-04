@@ -5,14 +5,14 @@ class Usuario {
     private $nombre_completo;
     private $email;
     private $contra;
-    private $isAdmin;
+    private $role;
 
-    public function __construct($id_usuario = null, $nombre_completo = null, $email = null, $contra = null, $isAdmin = false) {
+    public function __construct($id_usuario = null, $nombre_completo = null, $email = null, $contra = null, $role = 'vendedor') {
         $this->id_usuario = $id_usuario;
         $this->nombre_completo = $nombre_completo;
         $this->email = $email;
         $this->contra = $contra;
-        $this->isAdmin = $isAdmin;
+        $this->role = $role;
     }
 
 
@@ -32,8 +32,12 @@ class Usuario {
         return $this->contra;
     }
 
+    public function getRole() {
+        return $this->role;
+    }
+
     public function isAdmin() {
-        return $this->isAdmin;
+        return $this->role === 'admin';
     }
 
     public function setNombreCompleto($nombre_completo) {
@@ -48,8 +52,8 @@ class Usuario {
         $this->contra = $contra;
     }
 
-    public function setIsAdmin($isAdmin) {
-        $this->isAdmin = $isAdmin;
+    public function setRole($role) {
+        $this->role = $role;
     }
 
     // Método para hashear la contraseña
