@@ -10,9 +10,24 @@ class AuthController {
         $this->db = new DB();
     }
 
+    // Comprueba si ya existe un usuario con el email dado
+    private function userExists($email) {
+        $conexion = $this->db->getConnection();
+        $stmt = $conexion->prepare("SELECT 1 FROM usuario WHERE email = ? LIMIT 1");
+        if (!$stmt) {
+            return false; // en caso de error en prepare, consideramos que no existe (llamar al llamador para manejar)
+        }
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        $exists = ($res && $res->num_rows > 0);
+        $stmt->close();
+        return $exists;
+    }
+
     public function login($email, $contra) {
-        $cnoexion = $this->db->getConnection();
-    $stmt = $conexion->prepare("SELECT * FROM usuario WHERE email = ?");
+        $conexion = $this->db->getConnection();
+        $stmt = $conexion->prepare("SELECT * FROM usuario WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -39,11 +54,7 @@ class AuthController {
         $conexion = $this->db->getConnection();
 
         // Verificar si ya existe un usuario con ese email
-        $check = $conexion->prepare("SELECT id_usuario FROM usuarios WHERE email = ?");
-        $check->bind_param("s", $email);
-        $check->execute();
-        $res = $check->get_result();
-        if ($res && $res->num_rows > 0) {
+        if ($this->userExists($email)) {
             // Email ya registrado
             return null;
         }

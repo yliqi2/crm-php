@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../controller/auth_controller.php';
 
+
 $errors = [];
 $success = false;
 
@@ -39,7 +40,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $auth = new AuthController();
         $usuario = $auth->register($nombre_completo, $email, $contra);
         if ($usuario) {
-            $success = true;
+            // Auto-login: regenerar id y guardar datos de sesión, luego redirigir al dashboard
+            session_regenerate_id(true);
+            $_SESSION['id_usuario'] = $usuario->getIdUsuario();
+            $_SESSION['nombre_completo'] = $usuario->getNombreCompleto();
+            $_SESSION['email'] = $usuario->getEmail();
+            $_SESSION['role'] = $usuario->getRole();
+            $_SESSION['isAdmin'] = $usuario->isAdmin();
+
+            header('Location: index.php?action=dashboard');
+            exit;
         } else {
             $errors[] = 'No se pudo registrar el usuario. El email puede estar en uso.';
         }
