@@ -56,15 +56,6 @@ class Usuario {
         $this->role = $role;
     }
 
-    // Método para hashear la contraseña
-    public function hashContra($contra) {
-        $this->contra = password_hash($contra, PASSWORD_DEFAULT);
-    }
-
-    // Método para verificar la contraseña
-    public function verificarContra($contra) {
-        return password_verify($contra, $this->contra);
-    }
 }
 
 ?>
