@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['role'] = $usuario->getRole();
             $_SESSION['isAdmin'] = $usuario->isAdmin();
 
-            header('Location: index.php?action=dashboard');
+            header('Location: index.php?action=vendedor');
             exit;
         } else {
             $errors[] = 'No se pudo registrar el usuario. El email puede estar en uso.';

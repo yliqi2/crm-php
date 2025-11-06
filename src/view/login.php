@@ -30,8 +30,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['role'] = $usuario->getRole();
             // Mantener isAdmin boolean por compatibilidad
             $_SESSION['isAdmin'] = $usuario->isAdmin();
-
-            header('Location: index.php?action=dashboard');
+            
+            if ($_SESSION['role'] === 'admin') {
+                header('Location: index.php?action=admindashboard');
+            } else {
+                header('Location: index.php?action=vendedor');
+            }
+            
             exit;
         } else {
             $errors[] = 'Email o contraseña incorrectos.';

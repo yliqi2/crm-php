@@ -22,10 +22,18 @@ if (!isset($_SESSION['id_usuario'])) {
         <h2>Panel</h2>
         <p>Bienvenido, <strong><?php echo htmlspecialchars($_SESSION['nombre_completo'] ?? '', ENT_QUOTES, 'UTF-8'); ?></strong></p>
         <p>Email: <?php echo htmlspecialchars($_SESSION['email'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
-    <p>Rol: <?php echo htmlspecialchars($_SESSION['role'] ?? 'vendedor', ENT_QUOTES, 'UTF-8'); ?></p>
-    <p>Administrador: <?php echo (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') ? 'Sí' : 'No'; ?></p>
+        <p>Rol: <?php echo htmlspecialchars($_SESSION['role'] ?? 'vendedor', ENT_QUOTES, 'UTF-8'); ?></p>
+    <!-- <p>Administrador: <?php echo (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') ? 'Sí' : 'No'; ?></p> -->
 
         <p><a href="index.php?action=logout">Cerrar sesión</a></p>
+    </div>
+
+    <div class="actions">
+        <h3>Acciones Rápidas</h3>
+        <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+            <p><a href="index.php?action=manage_users">Gestionar Usuarios</a></p>
+            <p><a href="index.php?action=view_reports">Ver Reportes</a></p>
+        <?php endif; ?>
     </div>
 </body>
 </html>
