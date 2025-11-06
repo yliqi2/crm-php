@@ -4,13 +4,6 @@ require_once __DIR__ . '/../model/db.php';
 
 class UserController {
 
-
-    /**
-     * Obtiene todos los clientes asignados al usuario en sesión.
-     * Retorna un array (posiblemente vacío) de arrays asociativos o null si no hay sesión.
-     *
-     * @return array|null
-     */
     public function getClientesForOwner() {
 
         if (!isset($_SESSION['id_usuario'])) {
@@ -39,4 +32,56 @@ class UserController {
         return $rows;
     }
 
+    /**
+     * Obtiene un cliente por id solo si el usuario en sesión es el responsable.
+     * Retorna un array asociativo con los datos del cliente o null si no existe / no tiene permisos.
+     *
+     * @param int $id_cliente
+     * @return array|null
+     */
+    public function getClienteIfOwner($id_cliente) {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        if (!isset($_SESSION['id_usuario'])) {
+            return null; // no hay sesión
+        }
+
+        $id_usuario = (int) $_SESSION['id_usuario'];
+        $id_cliente = (int) $id_cliente;
+
+        $db = new DB();
+        $conexion = $db->getConnection();
+
+        $stmt = $conexion->prepare("SELECT * FROM cliente WHERE id_cliente = ? AND usuario_responsable = ? LIMIT 1");
+        if (!$stmt) {
+            return null;
+        }
+        $stmt->bind_param('ii', $id_cliente, $id_usuario);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        if ($res && $res->num_rows === 1) {
+            $row = $res->fetch_assoc();
+            $stmt->close();
+            return $row;
+        }
+        $stmt->close();
+        return null;
+    }
+
+
+    public function modifyCliente($id_cliente, $nombre_completo, $email, $tlf, $empresa) {
+        $db = new DB();
+        $conexion = $db->getConnection();
+
+        $stmt = $conexion->prepare("UPDATE cliente SET nombre_completo = ?, email = ?, tlf = ?, empresa = ? WHERE id_cliente = ?");
+        if (!$stmt) {
+            return false;
+        }
+        $stmt->bind_param('ssssi', $nombre_completo, $email, $tlf, $empresa, $id_cliente);
+        $success = $stmt->execute();
+        $stmt->close();
+        return $success;
+    }
 }
