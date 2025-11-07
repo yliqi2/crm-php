@@ -98,6 +98,7 @@ if ($searchCliente !== '') {
                         <td><?php echo htmlspecialchars($c['fecha_registro'] ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
                         <td>
                             <a class="btn-edit" href="index.php?action=editarclientes&id=<?php echo urlencode($c['id_cliente']); ?>">Editar</a>
+                            <a class="btn-edit" href="index.php?action=oportunidades&id=<?php echo urlencode($c['id_cliente']); ?>">Ver Oportunidades</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
