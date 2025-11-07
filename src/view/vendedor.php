@@ -23,8 +23,6 @@ if (!isset($_SESSION['id_usuario'])) {
         <p>Bienvenido, <strong><?php echo htmlspecialchars($_SESSION['nombre_completo'] ?? '', ENT_QUOTES, 'UTF-8'); ?></strong></p>
         <p>Email: <?php echo htmlspecialchars($_SESSION['email'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
         <p>Rol: <?php echo htmlspecialchars($_SESSION['role'] ?? 'vendedor', ENT_QUOTES, 'UTF-8'); ?></p>
-    <!-- <p>Administrador: <?php echo (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') ? 'Sí' : 'No'; ?></p> -->
-
         <p><a href="index.php?action=logout">Cerrar sesión</a></p>
     </div>
 

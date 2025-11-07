@@ -32,18 +32,8 @@ class UserController {
         return $rows;
     }
 
-    /**
-     * Obtiene un cliente por id solo si el usuario en sesión es el responsable.
-     * Retorna un array asociativo con los datos del cliente o null si no existe / no tiene permisos.
-     *
-     * @param int $id_cliente
-     * @return array|null
-     */
-    public function getClienteIfOwner($id_cliente) {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
 
+    public function getClienteIfOwner($id_cliente) {
         if (!isset($_SESSION['id_usuario'])) {
             return null; // no hay sesión
         }
@@ -83,5 +73,55 @@ class UserController {
         $success = $stmt->execute();
         $stmt->close();
         return $success;
+    }
+
+    public function searchClientesByName($name) {
+
+        $id_usuario = (int) $_SESSION['id_usuario'];
+        $name_like = '%' . $name . '%';
+
+        $db = new DB();
+        $conexion = $db->getConnection();
+
+        $stmt = $conexion->prepare("SELECT * FROM cliente WHERE usuario_responsable = ? AND nombre_completo LIKE ?");
+        if (!$stmt) {
+            return [];
+        }
+        $stmt->bind_param('is', $id_usuario, $name_like);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        $rows = [];
+        if ($res) {
+            while ($r = $res->fetch_assoc()) {
+                $rows[] = $r;
+            }
+        }
+        $stmt->close();
+        return $rows;
+    }
+
+    public function searchClientesByEmpresa($empresa) {
+
+        $id_usuario = (int) $_SESSION['id_usuario'];
+        $empresa_like = '%' . $empresa . '%';
+
+        $db = new DB();
+        $conexion = $db->getConnection();
+
+        $stmt = $conexion->prepare("SELECT * FROM cliente WHERE usuario_responsable = ? AND empresa LIKE ?");
+        if (!$stmt) {
+            return [];
+        }
+        $stmt->bind_param('is', $id_usuario, $empresa_like);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        $rows = [];
+        if ($res) {
+            while ($r = $res->fetch_assoc()) {
+                $rows[] = $r;
+            }
+        }
+        $stmt->close();
+        return $rows;
     }
 }

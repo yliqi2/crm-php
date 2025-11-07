@@ -2,11 +2,6 @@
 // Formulario de edición de cliente (solo propietario)
 require_once __DIR__ . '/../controller/user_controller.php';
 
-if (!isset($_SESSION['id_usuario'])) {
-    header('Location: index.php?action=login');
-    exit;
-}
-
 $uc = new UserController();
 
 // Obtener id desde GET o POST

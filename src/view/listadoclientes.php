@@ -2,12 +2,30 @@
 // Lista de clientes asignados al usuario en sesión
 require_once __DIR__ . '/../controller/user_controller.php';
 
-$uc = new UserController();
-$clientes = $uc->getClientesForOwner();
-
 if (!isset($_SESSION['id_usuario'])) {
     header('Location: index.php?action=login');
     exit;
+}
+
+$uc = new UserController();
+
+// Comprobar si hay búsqueda (GET o POST)
+$searchCliente = '';
+$searchEmpresa = '';
+if (isset($_POST['search']) && trim($_POST['search']) !== '') {
+    $searchCliente = trim($_POST['search']);
+}
+if (isset($_POST['searchEmpresa']) && trim($_POST['searchEmpresa']) !== '') {
+    $searchEmpresa = trim($_POST['searchEmpresa']);
+}
+
+// Ejecutar búsqueda o listar todos
+if ($searchCliente !== '') {
+    $clientes = $uc->searchClientesByName($searchCliente);
+} elseif ($searchEmpresa !== '') {
+    $clientes = $uc->searchClientesByEmpresa($searchEmpresa);
+} else {
+    $clientes = $uc->getClientesForOwner();
 }
 
 ?>
@@ -29,13 +47,34 @@ if (!isset($_SESSION['id_usuario'])) {
 <body>
     <h2>Mis clientes</h2>
 
+    <form method="post">
+        <input type="text" name="search" placeholder="Buscar clientes..." value="<?php echo htmlspecialchars($searchCliente, ENT_QUOTES, 'UTF-8'); ?>" />
+        <button type="submit">Buscar</button>
+        <?php if ($searchCliente !== ''): ?>
+            <a href="index.php?action=listadoclientes" style="margin-left:10px;">Reset</a>
+        <?php endif; ?>
+    </form>
+    <br>
+    <form method="post">
+        <input type="text" name="searchEmpresa" placeholder="Buscar empresa..." value="<?php echo htmlspecialchars($searchEmpresa, ENT_QUOTES, 'UTF-8'); ?>" />
+        <button type="submit">Buscar</button>
+        <?php if ($searchEmpresa !== ''): ?>
+            <a href="index.php?action=listadoclientes" style="margin-left:10px;">Reset</a>
+        <?php endif; ?>
+    </form>
+
     <?php if ($_GET['updated'] ?? false): ?>
+        <br>
         <p style="color:green;">Cliente actualizado correctamente.</p>
+        <br>
     <?php endif; ?>
 
     <?php if (empty($clientes)): ?>
-        <p>No tienes clientes asignados.</p>
+        <br>
+        <p>No tienes clientes asignados o no se encontraron resultados.</p>
+        <br>
     <?php else: ?>
+        <br>
         <table>
             <thead>
                 <tr>
