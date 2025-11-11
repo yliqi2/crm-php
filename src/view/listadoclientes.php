@@ -1,13 +1,13 @@
 <?php
 // Lista de clientes asignados al usuario en sesión
-require_once __DIR__ . '/../controller/user_controller.php';
+require_once __DIR__ . '/../controller/client_controller.php';
 
 if (!isset($_SESSION['id_usuario'])) {
     header('Location: index.php?action=login');
     exit;
 }
 
-$uc = new UserController();
+$cc = new ClientController();
 
 // Comprobar si hay búsqueda (GET o POST)
 $searchCliente = '';
@@ -21,11 +21,11 @@ if (isset($_POST['searchEmpresa']) && trim($_POST['searchEmpresa']) !== '') {
 
 // Ejecutar búsqueda o listar todos
 if ($searchCliente !== '') {
-    $clientes = $uc->searchClientesByName($searchCliente);
+    $clientes = $cc->searchClientesByName($searchCliente);
 } elseif ($searchEmpresa !== '') {
-    $clientes = $uc->searchClientesByEmpresa($searchEmpresa);
+    $clientes = $cc->searchClientesByEmpresa($searchEmpresa);
 } else {
-    $clientes = $uc->getClientesForOwner();
+    $clientes = $cc->getClientesForOwner();
 }
 
 ?>

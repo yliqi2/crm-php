@@ -3,7 +3,7 @@
 session_start();
 
 // Acción permitida y mapeo a vistas
-$allowed = ['login', 'register', 'admindashboard', 'vendedor', 'listadoclientes', 'editarclientes', 'oportunidades', 'logout'];
+$allowed = ['login', 'register', 'admindashboard', 'vendedor', 'listadoclientes', 'editarclientes', 'oportunidades', 'crearoportunidad', 'logout'];
 $action = isset($_GET['action']) ? basename($_GET['action']) : 'login';
 
 // Si action no esta dentor del array permitido de allowed muestra un error 404 (INEXISTENTE)

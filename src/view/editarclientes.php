@@ -1,8 +1,8 @@
 <?php
 // Formulario de edición de cliente (solo propietario)
-require_once __DIR__ . '/../controller/user_controller.php';
+require_once __DIR__ . '/../controller/client_controller.php';
 
-$uc = new UserController();
+$cc = new ClientController();
 
 // Obtener id desde GET o POST
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = 'Email inválido.';
 
     if (empty($errors)) {
-        $ok = $uc->modifyCliente($id, $nombre_completo, $email, $tlf, $empresa);
+        $ok = $cc->modifyCliente($id, $nombre_completo, $email, $tlf, $empresa);
         if ($ok) {
             header('Location: index.php?action=listadoclientes&updated=1');
             exit;
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 } else {
     // GET: cargar datos del cliente si es propietario
-    $cliente = $uc->getClienteIfOwner($id);
+    $cliente = $cc->getClienteIfOwner($id);
     if ($cliente === null) {
         // no existe o no tiene permisos
         header('HTTP/1.1 403 Forbidden');
