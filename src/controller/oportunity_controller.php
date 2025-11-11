@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../model/db.php';
 
 class OportunityController {
-
+    
     public function getOportunidadesByCliente($id_cliente) {
 
         $id_usuario = (int) $_SESSION['id_usuario'];
