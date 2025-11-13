@@ -12,7 +12,7 @@ if (!isset($_SESSION['id_usuario'])) {
     exit;
 }
 
-$id_cliente = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+$id_cliente = isset($_GET['idcli']) ? (int) $_GET['idcli'] : 0;
 
 $oportunidades = $oc->getOportunidadesByCliente($id_cliente);
 ?>

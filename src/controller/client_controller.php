@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../model/db.php';
+require_once __DIR__ . '/../model/cliente.php';
 
 class ClientController {
 
