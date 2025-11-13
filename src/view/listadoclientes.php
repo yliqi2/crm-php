@@ -90,15 +90,15 @@ if ($searchCliente !== '') {
             <tbody>
                 <?php foreach ($clientes as $c): ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($c['id_cliente'] ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
-                        <td><?php echo htmlspecialchars($c['nombre_completo'] ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
-                        <td><?php echo htmlspecialchars($c['email'] ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
-                        <td><?php echo htmlspecialchars($c['tlf'] ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
-                        <td><?php echo htmlspecialchars($c['empresa'] ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
-                        <td><?php echo htmlspecialchars($c['fecha_registro'] ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
+                        <td><?php echo htmlspecialchars($c->getIdCliente(), ENT_QUOTES, 'UTF-8'); ?></td>
+                        <td><?php echo htmlspecialchars($c->getNombreCompleto(), ENT_QUOTES, 'UTF-8'); ?></td>
+                        <td><?php echo htmlspecialchars($c->getEmail(), ENT_QUOTES, 'UTF-8'); ?></td>
+                        <td><?php echo htmlspecialchars($c->getTlf(), ENT_QUOTES, 'UTF-8'); ?></td>
+                        <td><?php echo htmlspecialchars($c->getEmpresa(), ENT_QUOTES, 'UTF-8'); ?></td>
+                        <td><?php echo htmlspecialchars($c->getFechaCreacion(), ENT_QUOTES, 'UTF-8'); ?></td>
                         <td>
-                            <a class="btn-edit" href="index.php?action=editarclientes&id=<?php echo urlencode($c['id_cliente']); ?>">Editar</a>
-                            <a class="btn-edit" href="index.php?action=oportunidades&idcli=<?php echo urlencode($c['id_cliente']); ?>">Ver Oportunidades</a>
+                            <a class="btn-edit" href="index.php?action=editarclientes&id=<?php echo urlencode($c->getIdCliente()); ?>">Editar</a>
+                            <a class="btn-edit" href="index.php?action=oportunidades&idcli=<?php echo urlencode($c->getIdCliente()); ?>">Ver Oportunidades</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

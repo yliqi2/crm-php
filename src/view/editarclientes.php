@@ -41,10 +41,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
     // precargar valores
-    $nombre_completo = $cliente['nombre_completo'] ?? '';
-    $email = $cliente['email'] ?? '';
-    $tlf = $cliente['tlf'] ?? '';
-    $empresa = $cliente['empresa'] ?? '';
+    $nombre_completo = $cliente->getNombreCompleto();
+    $email = $cliente->getEmail();
+    $tlf = $cliente->getTlf();
+    $empresa = $cliente->getEmpresa();
     $errors = [];
 }
 

@@ -10,7 +10,7 @@ class Cliente {
     private $fecha_creacion; // datetime
     private $usuario_responsable; //id_usuario
 
-    public function __construct($id_cliente = null, $nombre_completo = null, $email = null, $tlf = null, $empresa = null, $fecha_creacion = null, $usuario_responsable = null) {
+    public function __construct($id_cliente , $nombre_completo , $email , $tlf , $empresa , $fecha_creacion , $usuario_responsable ) {
         $this->id_cliente = $id_cliente;
         $this->nombre_completo = $nombre_completo;
         $this->email = $email;

@@ -5,6 +5,39 @@ require_once __DIR__ . '/../model/cliente.php';
 
 class ClientController {
 
+    public function crearClientes($res) {
+        $clientes = [];
+        if ($res && $res->num_rows > 1) {
+            while ($r = $res->fetch_assoc()) {
+                $cliente = new Cliente(
+                    $r['id_cliente'],
+                    $r['nombre_completo'],
+                    $r['email'],
+                    $r['tlf'],
+                    $r['empresa'],
+                    $r['fecha_registro'],
+                    $r['usuario_responsable']
+                 );
+
+                $clientes[] = $cliente;
+
+            }
+            return $clientes;
+        } else {
+            $r = $res->fetch_assoc();
+            $client = new Cliente(
+                $r['id_cliente'],
+                $r['nombre_completo'],
+                $r['email'],
+                $r['tlf'],
+                $r['empresa'],
+                $r['fecha_registro'],
+                $r['usuario_responsable']
+            );
+            return $client;
+        }
+    }
+
     public function getClientesForOwner() {
 
         $id_usuario = (int) $_SESSION['id_usuario'];
@@ -19,16 +52,9 @@ class ClientController {
         $stmt->bind_param('i', $id_usuario);
         $stmt->execute();
         $res = $stmt->get_result();
-        $rows = [];
-        if ($res) {
-            while ($r = $res->fetch_assoc()) {
-                $rows[] = $r;
-            }
-        }
         $stmt->close();
-        return $rows;
+        return $this->crearClientes($res);
     }
-
 
     public function getClienteIfOwner($id_cliente) {
 
@@ -46,9 +72,8 @@ class ClientController {
         $stmt->execute();
         $res = $stmt->get_result();
         if ($res && $res->num_rows === 1) {
-            $row = $res->fetch_assoc();
             $stmt->close();
-            return $row;
+            return $this->crearClientes($res);
         }
         $stmt->close();
         return null;
@@ -69,6 +94,8 @@ class ClientController {
         return $success;
     }
 
+
+
     public function searchClientesByName($name) {
 
         $id_usuario = (int) $_SESSION['id_usuario'];
@@ -84,14 +111,8 @@ class ClientController {
         $stmt->bind_param('is', $id_usuario, $name_like);
         $stmt->execute();
         $res = $stmt->get_result();
-        $rows = [];
-        if ($res) {
-            while ($r = $res->fetch_assoc()) {
-                $rows[] = $r;
-            }
-        }
         $stmt->close();
-        return $rows;
+        return $this->crearClientes($res);
     }
 
     public function searchClientesByEmpresa($empresa) {
@@ -109,14 +130,8 @@ class ClientController {
         $stmt->bind_param('is', $id_usuario, $empresa_like);
         $stmt->execute();
         $res = $stmt->get_result();
-        $rows = [];
-        if ($res) {
-            while ($r = $res->fetch_assoc()) {
-                $rows[] = $r;
-            }
-        }
         $stmt->close();
-        return $rows;
+        return $this->crearClientes($res);
     }
 
     
