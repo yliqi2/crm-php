@@ -1,6 +1,7 @@
 <?php
 // Formulario de edición de cliente (solo propietario)
 require_once __DIR__ . '/../controller/client_controller.php';
+require_once __DIR__ . '/../model/cliente.php';
 
 $cc = new ClientController();
 
@@ -10,6 +11,8 @@ if ($id <= 0) {
     header('Location: index.php?action=listadoclientes');
     exit;
 }
+
+
 
 // Procesar POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -32,14 +35,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 } else {
-    // GET: cargar datos del cliente si es propietario
+    
     $cliente = $cc->getClienteIfOwner($id);
-    if ($cliente === null) {
-        // no existe o no tiene permisos
-        header('HTTP/1.1 403 Forbidden');
-        echo '<p>No tienes permisos para editar este cliente.</p><p><a href="index.php?action=listadoclientes">Volver</a></p>';
-        exit;
-    }
+
     // precargar valores
     $nombre_completo = $cliente->getNombreCompleto();
     $email = $cliente->getEmail();

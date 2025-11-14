@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $valor_estimado = isset($_POST['valor_estimado']) ? (float) $_POST['valor_estimado'] : 0.0;
     $estado = isset($_POST['estado']) ? trim($_POST['estado']) : '';
 
-    $oportunidad = $oc->createOportunidad($id_cliente, $titulo, $descripcion, $valor_estimado);
+    $oportunidad = $oc->insertOportunity($id_cliente, $titulo, $descripcion, $valor_estimado);
 
     if ($oportunidad) {
         header('Location: index.php?action=oportunidades&id=' . $id_cliente);

@@ -18,6 +18,9 @@ if ($id_oportunidad <= 0) {
 
 $oportunidad = $oc->getOportunidadById($id_oportunidad);
 
+// preserve returning cliente id (can be passed from list as idcli)
+$return_idcli = isset($_GET['idcli']) ? (int)$_GET['idcli'] : (method_exists($oportunidad, 'getIdCliente') ? $oportunidad->getIdCliente() : 0);
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $titulo = isset($_POST['titulo']) ? trim($_POST['titulo']) : '';
     $descripcion = isset($_POST['descripcion']) ? trim($_POST['descripcion']) : '';
@@ -33,7 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($errors)) {
         $ok = $oc->updateOportunidad($id_oportunidad, $titulo, $descripcion, $valor_estimado, $estado);
         if ($ok) {
-            header('Location: index.php?action=oportunidades&idcli=' . urlencode($oportunidad['id_cliente']));
+            // use provided idcli when available, otherwise fall back to opportunity's cliente
+            header('Location: index.php?action=oportunidades&idcli=' . urlencode($return_idcli));
             exit;
         } else {
             $errors[] = 'No se pudo actualizar la oportunidad.';
@@ -61,24 +65,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <h2>Editar oportunidad - ID <?php echo htmlspecialchars($id_oportunidad, ENT_QUOTES, 'UTF-8'); ?></h2>
     <p>Aquí iría el formulario para editar la oportunidad con ID <?php echo htmlspecialchars($id_oportunidad, ENT_QUOTES, 'UTF-8'); ?>.</p>
-    <p><a class="btn-edit" href="index.php?action=oportunidades&idcli=<?php echo urlencode($id_oportunidad); ?>">Volver al listado de oportunidades</a></p>
+    <p><a class="btn-edit" href="index.php?action=oportunidades&idcli=<?php echo urlencode($return_idcli); ?>">Volver al listado de oportunidades</a></p>
 
     <form method="post">
 
         <label>Título:
-            <input type="text" name="titulo" value="<?php echo htmlspecialchars($oportunidad['titulo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" required maxlength="100">
+            <input type="text" name="titulo" value="<?php echo htmlspecialchars($oportunidad->getTitulo() ?? '', ENT_QUOTES, 'UTF-8'); ?>" required maxlength="100">
         </label><br><br>
 
         <label>Descripción:
-            <textarea name="descripcion" required maxlength="250"><?php echo htmlspecialchars($oportunidad['descripcion'] ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
+            <textarea name="descripcion" required maxlength="250"><?php echo htmlspecialchars($oportunidad->getDescripcion() ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
         </label><br><br>
 
         <label>Valor Estimado:
-            <input type="number" step="0.01" name="valor_estimado" value="<?php echo htmlspecialchars($oportunidad['valor_estimado'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" required>
+            <input type="number" step="0.01" name="valor_estimado" value="<?php echo htmlspecialchars($oportunidad->getValor() ?? '', ENT_QUOTES, 'UTF-8'); ?>" required>
         </label><br><br>
 
         <label>Estado:
-            <input type="text" name="estado" value="<?php echo htmlspecialchars($oportunidad['estado'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" required>
+            <?php
+                $currentEstado = $oportunidad->getEstado() ?? '';
+                $estados = ['progreso' => 'progreso', 'gananada' => 'gananada', 'perdida' => 'perdida'];
+            ?>
+            <select name="estado" required>
+                <?php foreach ($estados as $val => $label): ?>
+                    <option value="<?php echo htmlspecialchars($val, ENT_QUOTES, 'UTF-8'); ?>" <?php echo ($val === $currentEstado) ? 'selected' : ''; ?>>
+                        <?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8'); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
         </label><br><br>
 
         <button type="submit">Guardar cambios</button>

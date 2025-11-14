@@ -10,7 +10,7 @@ class Oportunidad {
     private $f_creacion; //datetime
     private $usuario_responsable; //id_usuario
 
-    public function __construct($id_oportunidad = null, $id_cliente = null, $titulo = null, $descripcion = null, $valor = null, $estado = 'progreso', $f_creacion = null, $usuario_responsable = null) {
+    public function __construct($id_oportunidad, $id_cliente, $titulo, $descripcion, $valor, $estado, $f_creacion, $usuario_responsable) {
         $this->id_oportunidad = $id_oportunidad;
         $this->id_cliente = $id_cliente;
         $this->titulo = $titulo;

@@ -34,9 +34,9 @@ $oportunidades = $oc->getOportunidadesByCliente($id_cliente);
 </head>
 <body>
     <h2>Listado de Oportunidades</h2>
-    <p><a class="btn-edit" href="index.php?action=listadoclientes">Volver al listado de clientes</a></p>
+    <h2>Crear Oportunidad para este cliente</h2>
     <p><a class="btn-edit" href="index.php?action=crearoportunidad&id_cliente=<?php echo urlencode($id_cliente); ?>">Crear nueva oportunidad para este cliente</a></p>
-
+    <h2>Oportunidades existentes</h2>
     <?php if (empty($oportunidades)): ?>
         <p>No hay oportunidades para este cliente.</p>
     <?php else: ?>
@@ -56,21 +56,22 @@ $oportunidades = $oc->getOportunidadesByCliente($id_cliente);
             <tbody>
                 <?php foreach ($oportunidades as $oportunidad): ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($oportunidad['id_oportunidad'] ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
-                        <td><?php echo htmlspecialchars($oportunidad['id_cliente'] ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
-                        <td><?php echo htmlspecialchars($oportunidad['titulo'] ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
-                        <td><?php echo htmlspecialchars($oportunidad['descripcion'] ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
-                        <td><?php echo htmlspecialchars($oportunidad['valor_estimado'] ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
-                        <td><?php echo htmlspecialchars($oportunidad['estado'] ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
-                        <td><?php echo htmlspecialchars($oportunidad['f_creacion'] ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
+                        <td><?php echo htmlspecialchars($oportunidad->getIdOportunidad() ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
+                        <td><?php echo htmlspecialchars($oportunidad->getIdCliente() ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
+                        <td><?php echo htmlspecialchars($oportunidad->getTitulo() ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
+                        <td><?php echo htmlspecialchars($oportunidad->getDescripcion() ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
+                        <td><?php echo htmlspecialchars($oportunidad->getValor() ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
+                        <td><?php echo htmlspecialchars($oportunidad->getEstado() ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
+                        <td><?php echo htmlspecialchars($oportunidad->getFCreacion() ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
                         <td>
-                            <a class="btn-edit" href="index.php?action=editaroportunidad&id=<?php echo urlencode($oportunidad['id_oportunidad']); ?>">Editar</a>
+                            <a class="btn-edit" href="index.php?action=editaroportunidad&idcli=<?php echo urlencode($id_cliente); ?>&id=<?php echo urlencode($oportunidad->getIdOportunidad()); ?>">Editar</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
     <?php endif; ?>
+    <p><a href="index.php?action=listadoclientes">Volver al listado de clientes</a></p>
 </body>
 </html>
 
