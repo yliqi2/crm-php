@@ -29,6 +29,21 @@ class ClientController {
             return $clientes;
         } 
     }
+    public function emailAlreadyInUse($email) {
+        $db = new DB();
+        $conexion = $db->getConnection();
+
+        $stmt = $conexion->prepare("SELECT 1 FROM cliente WHERE email = ? LIMIT 1");
+        if (!$stmt) {
+            return false; // en caso de error en prepare, consideramos que no existe (llamar al llamador para manejar)
+        }
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        $exists = ($res && $res->num_rows > 0);
+        $stmt->close();
+        return $exists;
+    }
 
     // Actualiza el cliente
     public function modifyCliente($id_cliente, $nombre_completo, $email, $tlf, $empresa) {
@@ -39,6 +54,7 @@ class ClientController {
         if (!$stmt) {
             return false;
         }
+
         $stmt->bind_param('ssssi', $nombre_completo, $email, $tlf, $empresa, $id_cliente);
         $success = $stmt->execute();
         $stmt->close();

@@ -24,6 +24,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors = [];
     if ($nombre_completo === '') $errors[] = 'El nombre es obligatorio.';
     if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = 'Email inválido.';
+    if ($tlf === '') $errors[] = 'El teléfono es obligatorio.';
+    if ($empresa === '') $errors[] = 'La empresa es obligatoria.';
+    if ($cc->emailAlreadyInUse($email)) $errors[] = 'El email ya está en uso.';
 
     if (empty($errors)) {
         $ok = $cc->modifyCliente($id, $nombre_completo, $email, $tlf, $empresa);

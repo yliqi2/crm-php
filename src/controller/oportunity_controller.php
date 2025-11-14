@@ -101,7 +101,8 @@ class OportunityController {
         if (!$stmt) {
             return false;
         }
-        $stmt->bind_param('ssdiii', $titulo, $descripcion, $valor_estimado, $estado, $id_oportunidad, $id_usuario);
+        // types: string, string, double, string (estado), int(id_oportunidad), int(id_usuario)
+        $stmt->bind_param('ssdsii', $titulo, $descripcion, $valor_estimado, $estado, $id_oportunidad, $id_usuario);
         $success = $stmt->execute();
         $stmt->close();
         return $success;

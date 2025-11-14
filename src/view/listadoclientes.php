@@ -98,7 +98,7 @@ if ($searchCliente !== '') {
                         <td><?php echo htmlspecialchars($c->getFechaCreacion(), ENT_QUOTES, 'UTF-8'); ?></td>
                         <td>
                             <a class="btn-edit" href="index.php?action=editarclientes&id=<?php echo urlencode($c->getIdCliente()); ?>">Editar</a>
-                            <a class="btn-edit" href="index.php?action=oportunidades&idcli=<?php echo urlencode($c->getIdCliente()); ?>">Ver Oportunidades</a>
+                            <a class="btn-edit" href="index.php?action=listadooportunidades&idcli=<?php echo urlencode($c->getIdCliente()); ?>">Ver Oportunidades</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

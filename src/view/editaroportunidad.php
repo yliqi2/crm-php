@@ -18,7 +18,6 @@ if ($id_oportunidad <= 0) {
 
 $oportunidad = $oc->getOportunidadById($id_oportunidad);
 
-// preserve returning cliente id (can be passed from list as idcli)
 $return_idcli = isset($_GET['idcli']) ? (int)$_GET['idcli'] : (method_exists($oportunidad, 'getIdCliente') ? $oportunidad->getIdCliente() : 0);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -37,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $ok = $oc->updateOportunidad($id_oportunidad, $titulo, $descripcion, $valor_estimado, $estado);
         if ($ok) {
             // use provided idcli when available, otherwise fall back to opportunity's cliente
-            header('Location: index.php?action=oportunidades&idcli=' . urlencode($return_idcli));
+            header('Location: index.php?action=listadooportunidades&idcli=' . urlencode($return_idcli));
             exit;
         } else {
             $errors[] = 'No se pudo actualizar la oportunidad.';
@@ -65,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <h2>Editar oportunidad - ID <?php echo htmlspecialchars($id_oportunidad, ENT_QUOTES, 'UTF-8'); ?></h2>
     <p>Aquí iría el formulario para editar la oportunidad con ID <?php echo htmlspecialchars($id_oportunidad, ENT_QUOTES, 'UTF-8'); ?>.</p>
-    <p><a class="btn-edit" href="index.php?action=oportunidades&idcli=<?php echo urlencode($return_idcli); ?>">Volver al listado de oportunidades</a></p>
+    <p><a class="btn-edit" href="index.php?action=listadooportunidades&idcli=<?php echo urlencode($return_idcli); ?>">Volver al listado de oportunidades</a></p>
 
     <form method="post">
 
@@ -84,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <label>Estado:
             <?php
                 $currentEstado = $oportunidad->getEstado() ?? '';
-                $estados = ['progreso' => 'progreso', 'gananada' => 'gananada', 'perdida' => 'perdida'];
+                $estados = ['progreso' => 'progreso', 'ganada' => 'ganada', 'perdida' => 'perdida'];
             ?>
             <select name="estado" required>
                 <?php foreach ($estados as $val => $label): ?>
