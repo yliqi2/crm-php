@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../controller/auth_controller.php';
+require_once __DIR__ . '/../controller/usuario_controller.php';
 
 
 $errors = [];
@@ -37,8 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (empty($errors)) {
-        $auth = new AuthController();
-        $usuario = $auth->register($nombre_completo, $email, $contra);
+    $auth = new UsuarioController();
+    $usuario = $auth->register($nombre_completo, $email, $contra);
         if ($usuario) {
             // Auto-login: regenerar id y guardar datos de sesión, luego redirigir al dashboard
             session_regenerate_id(true);

@@ -1,7 +1,9 @@
 <?php
 require_once __DIR__ . '/../controller/oportunity_controller.php';
+require_once __DIR__ . '/../controller/usuario_controller.php';
 
 $oc = new OportunityController();
+$uc = new UsuarioController();
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -15,6 +17,14 @@ if (!isset($_SESSION['id_usuario'])) {
 $id_cliente = isset($_GET['idcli']) ? (int) $_GET['idcli'] : 0;
 
 $oportunidades = $oc->getOportunidadesByCliente($id_cliente);
+
+if (isset($_GET['delete'])) {
+    $id_oportunidad = (int) $_GET['delete'];
+    $oc->deleteOportunidad($id_oportunidad);
+    header('Location: index.php?action=listadooportunidades&idcli=' . urlencode($id_cliente));
+    exit;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -65,6 +75,7 @@ $oportunidades = $oc->getOportunidadesByCliente($id_cliente);
                         <td><?php echo htmlspecialchars($oportunidad->getFCreacion() ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
                         <td>
                             <a class="btn-edit" href="index.php?action=editaroportunidad&idcli=<?php echo urlencode($id_cliente); ?>&id=<?php echo urlencode($oportunidad->getIdOportunidad()); ?>">Editar</a>
+                            <a class="btn-edit" href="index.php?action=listadooportunidades&idcli=<?php echo urlencode($id_cliente); ?>&delete=<?php echo urlencode($oportunidad->getIdOportunidad()); ?>">Eliminar</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -72,6 +83,7 @@ $oportunidades = $oc->getOportunidadesByCliente($id_cliente);
         </table>
     <?php endif; ?>
     <p><a href="index.php?action=listadoclientes">Volver al listado de clientes</a></p>
+
 </body>
 </html>
 

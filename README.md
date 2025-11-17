@@ -24,7 +24,7 @@ src/
   config/
     config.php               # Credenciales / configuración DB
   controller/
-    auth_controller.php      # Login / register
+    usuario_controller.php   # Login / register 
   model/
     usuario.php              # Modelo Usuario
     db.php                   # Wrapper de conexión mysqli

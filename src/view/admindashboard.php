@@ -31,7 +31,7 @@ if (!isset($_SESSION['id_usuario'])) {
     <div class="actions">
         <h3>Acciones Rápidas</h3>
         <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-            <p><a href="index.php?action=manage_users">Gestionar Usuarios</a></p>
+            <p><a href="index.php?action=listadoclientes">Gestionar Usuarios</a></p>
             <p><a href="index.php?action=view_reports">Ver Reportes</a></p>
         <?php endif; ?>
     </div>

@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../model/usuario.php';
 require_once __DIR__ . '/../model/db.php';
 
-class AuthController {
+class UsuarioController {
     private $db;
 
     public function __construct() {
@@ -15,7 +15,7 @@ class AuthController {
         $conexion = $this->db->getConnection();
         $stmt = $conexion->prepare("SELECT 1 FROM usuario WHERE email = ? LIMIT 1");
         if (!$stmt) {
-            return false; // en caso de error en prepare, consideramos que no existe (llamar al llamador para manejar)
+            return false; 
         }
         $stmt->bind_param("s", $email);
         $stmt->execute();
@@ -62,8 +62,8 @@ class AuthController {
         // Hashear la contraseña
         $contraHasheada = password_hash($contra, PASSWORD_DEFAULT);
 
-    // Insertar usuario (la columna `role` en la BD tiene default 'vendedor')
-    $stmt = $conexion->prepare("INSERT INTO usuario (nombre_completo, email, contra) VALUES (?, ?, ?)");
+        // Insertar usuario (la columna `role` en la BD tiene default 'vendedor')
+        $stmt = $conexion->prepare("INSERT INTO usuario (nombre_completo, email, contra) VALUES (?, ?, ?)");
         if (!$stmt) {
             return null;
         }
@@ -77,6 +77,19 @@ class AuthController {
         }
 
         return null;
+    }
+
+    public function isAdmin($id_usuario) {
+        $conexion = $this->db->getConnection();
+        $stmt = $conexion->prepare("SELECT role FROM usuario WHERE id_usuario = ? LIMIT 1");
+        $stmt->bind_param('i', $id_usuario);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows === 1) {
+            $row = $result->fetch_assoc();
+            return $row['role'] === 'admin';
+        }
+        return false;
     }
 
 }

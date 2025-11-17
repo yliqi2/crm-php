@@ -1,6 +1,7 @@
 <?php
 // Lista de clientes asignados al usuario en sesión
 require_once __DIR__ . '/../controller/client_controller.php';
+require_once __DIR__ . '/../controller/usuario_controller.php';
 
 if (!isset($_SESSION['id_usuario'])) {
     header('Location: index.php?action=login');
@@ -8,6 +9,7 @@ if (!isset($_SESSION['id_usuario'])) {
 }
 
 $cc = new ClientController();
+$uc = new UsuarioController();
 
 // Comprobar si hay búsqueda (GET o POST)
 $searchCliente = '';
@@ -19,14 +21,17 @@ if (isset($_POST['searchEmpresa']) && trim($_POST['searchEmpresa']) !== '') {
     $searchEmpresa = trim($_POST['searchEmpresa']);
 }
 
+
 // Ejecutar búsqueda o listar todos
 if ($searchCliente !== '') {
     $clientes = $cc->searchClientesByName($searchCliente);
 } elseif ($searchEmpresa !== '') {
     $clientes = $cc->searchClientesByEmpresa($searchEmpresa);
-} else {
-    $clientes = $cc->getClientesForOwner();
-}
+} elseif (isset($_GET['remove'])){
+    $idToRemove = (int)$_GET['remove'];
+    $cc->removeCliente($idToRemove);
+} 
+$clientes = $cc->getClientesForOwner();
 
 ?>
 <!DOCTYPE html>
@@ -97,7 +102,10 @@ if ($searchCliente !== '') {
                         <td><?php echo htmlspecialchars($c->getEmpresa(), ENT_QUOTES, 'UTF-8'); ?></td>
                         <td><?php echo htmlspecialchars($c->getFechaCreacion(), ENT_QUOTES, 'UTF-8'); ?></td>
                         <td>
-                            <a class="btn-edit" href="index.php?action=editarclientes&id=<?php echo urlencode($c->getIdCliente()); ?>">Editar</a>
+                            <?php if ($uc->isAdmin((int) $_SESSION['id_usuario'])): ?>
+                                <a class="btn-edit" href="index.php?action=editarclientes&id=<?php echo urlencode($c->getIdCliente()); ?>">Editar</a>
+                                <a class="btn-edit" href="index.php?action=listadoclientes&remove=<?php echo urlencode($c->getIdCliente()); ?>">Eliminar</a>
+                            <?php endif; ?>
                             <a class="btn-edit" href="index.php?action=listadooportunidades&idcli=<?php echo urlencode($c->getIdCliente()); ?>">Ver Oportunidades</a>
                         </td>
                     </tr>
@@ -105,7 +113,11 @@ if ($searchCliente !== '') {
             </tbody>
         </table>
     <?php endif; ?>
-
-    <p><a href="index.php?action=vendedor">Volver al panel</a></p>
+    
+    <?php if ($uc->isAdmin((int) $_SESSION['id_usuario'])): ?>
+        <p><a href="index.php?action=admindashboard">Volver al panel de administrador</a></p>
+    <?php else: ?>
+        <p><a href="index.php?action=vendedor">Volver al panel</a></p>
+    <?php endif; ?>
 </body>
 </html>

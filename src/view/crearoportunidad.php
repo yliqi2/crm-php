@@ -2,8 +2,6 @@
 
 require_once __DIR__ . '/../controller/oportunity_controller.php';
 
-echo "Crear Oportunidad View";
-
 if (!isset($_SESSION['id_usuario'])) {
     header('Location: index.php?action=login');
     exit;
@@ -22,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $oportunidad = $oc->insertOportunity($id_cliente, $titulo, $descripcion, $valor_estimado);
 
     if ($oportunidad) {
-        header('Location: index.php?action=oportunidades&id=' . $id_cliente);
+        header('Location: index.php?action=listadooportunidades&idcli=' . $id_cliente);
         exit;
     } else {
         echo '<p>Error al crear la oportunidad. Por favor, inténtelo de nuevo.</p>';
@@ -30,7 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 ?>
-
 
 <h2>Crear Nueva Oportunidad para Cliente ID: <?php echo htmlspecialchars($id_cliente, ENT_QUOTES, 'UTF-8'); ?></h2>
 <form method="post">
@@ -46,4 +43,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <button type="submit">Crear Oportunidad</button>
 </form>
 
-<a href="index.php?action=oportunidades&id=<?php echo htmlspecialchars($id_cliente, ENT_QUOTES, 'UTF-8'); ?>">Volver al listado de oportunidades</a>
+<a href="index.php?action=listadooportunidades&idcli=<?php echo htmlspecialchars($id_cliente, ENT_QUOTES, 'UTF-8'); ?>">Volver al listado de oportunidades</a>

@@ -20,6 +20,9 @@ $oportunidad = $oc->getOportunidadById($id_oportunidad);
 
 $return_idcli = isset($_GET['idcli']) ? (int)$_GET['idcli'] : (method_exists($oportunidad, 'getIdCliente') ? $oportunidad->getIdCliente() : 0);
 
+// determinar si el usuario puede editar el estado (solo admin)
+$canEditEstado = (isset($_SESSION['role']) && $_SESSION['role'] === 'admin');
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $titulo = isset($_POST['titulo']) ? trim($_POST['titulo']) : '';
     $descripcion = isset($_POST['descripcion']) ? trim($_POST['descripcion']) : '';
@@ -55,16 +58,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar oportunidades</title>
-    <style>
-        .btn-edit { display:inline-block; padding:6px 10px; background:#007bff; color:#fff; text-decoration:none; border-radius:4px; }
-        .btn-edit:hover { background:#0056b3; }
-    </style>
-
 </head>
 <body>
     <h2>Editar oportunidad - ID <?php echo htmlspecialchars($id_oportunidad, ENT_QUOTES, 'UTF-8'); ?></h2>
-    <p>Aquí iría el formulario para editar la oportunidad con ID <?php echo htmlspecialchars($id_oportunidad, ENT_QUOTES, 'UTF-8'); ?>.</p>
-    <p><a class="btn-edit" href="index.php?action=listadooportunidades&idcli=<?php echo urlencode($return_idcli); ?>">Volver al listado de oportunidades</a></p>
 
     <form method="post">
 
@@ -85,9 +81,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $currentEstado = $oportunidad->getEstado() ?? '';
                 $estados = ['progreso' => 'progreso', 'ganada' => 'ganada', 'perdida' => 'perdida'];
             ?>
-            <select name="estado" required>
+            <select name="estado" required <?php echo $canEditEstado ? '' : 'disabled'; ?>>
                 <?php foreach ($estados as $val => $label): ?>
-                    <option value="<?php echo htmlspecialchars($val, ENT_QUOTES, 'UTF-8'); ?>" <?php echo ($val === $currentEstado) ? 'selected' : ''; ?>>
+                    <option value="<?php echo htmlspecialchars($val, ENT_QUOTES, 'UTF-8'); ?>" <?php echo ((string)$val === (string)$currentEstado) ? 'selected' : ''; ?>>
                         <?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8'); ?>
                     </option>
                 <?php endforeach; ?>
@@ -97,6 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button type="submit">Guardar cambios</button>
 
     </form>
+    <p><a href="index.php?action=listadooportunidades&idcli=<?php echo urlencode($return_idcli); ?>">Volver al listado de oportunidades</a></p>
 
 </body>
 </html>

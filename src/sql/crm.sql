@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 04-11-2025 a las 20:07:32
+-- Tiempo de generación: 17-11-2025 a las 19:28:34
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -37,6 +37,13 @@ CREATE TABLE `cliente` (
   `usuario_responsable` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `cliente`
+--
+
+INSERT INTO `cliente` (`id_cliente`, `nombre_completo`, `email`, `tlf`, `empresa`, `fecha_registro`, `usuario_responsable`) VALUES
+(3, 'Marc', 'marcloool@gmail.com', 1224555552, 'Riot Game', '2025-11-06', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -53,6 +60,14 @@ CREATE TABLE `oportunidad` (
   `f_creacion` date NOT NULL DEFAULT current_timestamp(),
   `usuario_responsable` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `oportunidad`
+--
+
+INSERT INTO `oportunidad` (`id_oportunidad`, `id_cliente`, `titulo`, `descripcion`, `valor_estimado`, `estado`, `f_creacion`, `usuario_responsable`) VALUES
+(1, 3, 'Venta de paquete de software ERP a Logística Andina S.A.', 'Durante la reunión del 5 de noviembre, el gerente de operaciones mostró interés en implementar nuestro sistema ERP para optimizar la gestión de inventarios y facturación.', 87.00, 'ganada', '2025-11-07', 1),
+(7, 3, 'Darius', 'Skin legendaria :DDD', 27.00, 'progreso', '2025-11-17', 1);
 
 -- --------------------------------------------------------
 
@@ -87,8 +102,9 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id_usuario`, `nombre_completo`, `email`, `contra`, `role`) VALUES
-(1, 'asd', 'a@gmail.com', '$2y$10$oUH8yck6HRkOXk7iyNPxyu3yDbM/.BmxBl5.fZQ/A3/uaSJjfT4/2', ''),
-(2, 'Liqiang Yang', 'b@gmail.com', '$2y$10$SrwSZyA.C/kZ4MZvyokhCu0mK3aPJS3iaEDx9y5IwoDY5kglH337.', '');
+(1, 'asd', 'a@gmail.com', '$2y$10$oUH8yck6HRkOXk7iyNPxyu3yDbM/.BmxBl5.fZQ/A3/uaSJjfT4/2', 'vendedor'),
+(2, 'Marc Hunter', 'b@gmail.com', '$2y$10$SrwSZyA.C/kZ4MZvyokhCu0mK3aPJS3iaEDx9y5IwoDY5kglH337.', 'vendedor'),
+(3, 'Liqiang Yang', 'admin@gmail.com', '$2y$10$UzRI2kluTfWffRRyDw6kS.swoePOSGSEW.Bj4LpYmmPMMnkIrrWLK', 'admin');
 
 --
 -- Índices para tablas volcadas
@@ -100,14 +116,14 @@ INSERT INTO `usuario` (`id_usuario`, `nombre_completo`, `email`, `contra`, `role
 ALTER TABLE `cliente`
   ADD PRIMARY KEY (`id_cliente`),
   ADD UNIQUE KEY `email` (`email`),
-  ADD UNIQUE KEY `usuario_responsable` (`usuario_responsable`);
+  ADD KEY `usuario_responsable` (`usuario_responsable`) USING BTREE;
 
 --
 -- Indices de la tabla `oportunidad`
 --
 ALTER TABLE `oportunidad`
   ADD PRIMARY KEY (`id_oportunidad`),
-  ADD UNIQUE KEY `id_cliente` (`id_cliente`,`usuario_responsable`),
+  ADD KEY `id_cliente` (`id_cliente`),
   ADD KEY `usuario_responsable` (`usuario_responsable`);
 
 --
@@ -115,7 +131,7 @@ ALTER TABLE `oportunidad`
 --
 ALTER TABLE `tareas`
   ADD PRIMARY KEY (`id_tarea`),
-  ADD UNIQUE KEY `id_oportunidad` (`id_oportunidad`);
+  ADD KEY `id_oportunidad` (`id_oportunidad`);
 
 --
 -- Indices de la tabla `usuario`
@@ -132,13 +148,13 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `oportunidad`
 --
 ALTER TABLE `oportunidad`
-  MODIFY `id_oportunidad` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_oportunidad` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `tareas`
@@ -150,7 +166,7 @@ ALTER TABLE `tareas`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Restricciones para tablas volcadas

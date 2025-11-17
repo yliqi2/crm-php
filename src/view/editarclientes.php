@@ -26,7 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = 'Email inválido.';
     if ($tlf === '') $errors[] = 'El teléfono es obligatorio.';
     if ($empresa === '') $errors[] = 'La empresa es obligatoria.';
-    if ($cc->emailAlreadyInUse($email)) $errors[] = 'El email ya está en uso.';
+    // Excluir el cliente actual al comprobar existencia de email (evita falso positivo si no se cambia)
+    if ($cc->emailAlreadyInUse($email, $id)) $errors[] = 'El email ya está en uso.';
 
     if (empty($errors)) {
         $ok = $cc->modifyCliente($id, $nombre_completo, $email, $tlf, $empresa);
