@@ -30,8 +30,11 @@ if ($searchCliente !== '') {
 } elseif (isset($_GET['remove'])){
     $idToRemove = (int)$_GET['remove'];
     $cc->removeCliente($idToRemove);
-} 
-$clientes = $cc->getClientesForOwner();
+    header('Location: index.php?action=listadoclientes');
+    exit;
+} else {
+    $clientes = $cc->getClientesForOwner();
+}
 
 ?>
 <!DOCTYPE html>

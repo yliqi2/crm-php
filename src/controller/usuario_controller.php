@@ -25,6 +25,7 @@ class UsuarioController {
         return $exists;
     }
 
+    //hace login, comprobando que la cuenta y la contraseña sea correcta
     public function login($email, $contra) {
         $conexion = $this->db->getConnection();
         $stmt = $conexion->prepare("SELECT * FROM usuario WHERE email = ?");
@@ -34,7 +35,6 @@ class UsuarioController {
 
         if ($result->num_rows === 1) {
             $row = $result->fetch_assoc();
-            // DB now stores role enum ('admin'|'vendedor') in column `role`
             $usuario = new Usuario(
                 $row['id_usuario'],
                 $row['nombre_completo'],
@@ -146,6 +146,8 @@ class UsuarioController {
         return false;
     }
 
+
+    // funcion que se utiliza para crear usuario siendo admin
     public function createUser($nombre_completo, $email, $contra, $role) {
         $conexion = $this->db->getConnection();
 
@@ -175,7 +177,7 @@ class UsuarioController {
         return null;
     }
 
-
+    //funcion que devuelve el usuario por id
     public function getUserById($id_usuario) {
         $conexion = $this->db->getConnection();
         $stmt = $conexion->prepare("SELECT * FROM usuario WHERE id_usuario = ? LIMIT 1");

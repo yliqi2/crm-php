@@ -35,6 +35,7 @@ class ClientController {
         } 
     }
 
+    // funcion comprobación de correo si esta en uso, además de comprobar si es el correo es del propio usuario para poder hacer el update
     public function emailAlreadyInUse($email, $excludeId = null) {
         $conexion = $this->db->getConnection();
 

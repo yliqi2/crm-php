@@ -59,7 +59,7 @@ if (isset($_GET['delete'])) {
                     <th>Estado</th>
                     <th>Fecha de Creación</th>
                     <th>Usuario responsable</th>
-                    <th colspan="2">Acciones</th>
+                    <th colspan="3">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -78,6 +78,9 @@ if (isset($_GET['delete'])) {
                         </td>
                         <td>
                             <a class="btn-edit" href="index.php?action=listadooportunidades&idcli=<?php echo urlencode($id_cliente); ?>&delete=<?php echo urlencode($oportunidad->getIdOportunidad()); ?>">Eliminar</a>
+                        </td>
+                        <td>
+                            <a class="btn-edit" href="index.php?action=listatareas&idcli=<?php echo urlencode($id_cliente); ?>&ido=<?php echo urlencode($oportunidad->getIdOportunidad()); ?>">Tareas</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
