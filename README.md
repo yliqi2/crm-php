@@ -83,10 +83,6 @@ Puntos de extensión y mejoras recomendadas
 - Centralizar lógica de base de datos en un DAO/Repository para facilitar tests.
 - Añadir tests unitarios/funcionales (PHPUnit) y comprobaciones automáticas.
 
-Soporte y desarrollo
-Si quieres que haga cambios (migrar a modelos con inyección de dependencias, añadir tests, extraer CSS o añadir gráficos en el dashboard) dímelo y lo implemento.
-
 License / Notas
 Proyecto creado como ejercicio/práctica. Revisa la base de datos y los datos de ejemplo en `src/sql/crm.sql` antes de usar en producción.
 
-*** Fin del README actualizado
