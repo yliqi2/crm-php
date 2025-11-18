@@ -60,7 +60,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Crear usuario</title>
-    
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .form { max-width: 520px; margin: 0 auto; }
+        input[type="text"], input[type="email"], input[type="password"], select { width: 100%; padding: 8px; margin: 6px 0 12px; box-sizing: border-box; }
+        .errors { background:#ffe6e6; padding:10px; border:1px solid #ffb3b3; margin-bottom:12px; }
+    </style>
 </head>
 <body>
     <div class="form">

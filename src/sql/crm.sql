@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-11-2025 a las 19:28:34
+-- Tiempo de generación: 18-11-2025 a las 20:15:57
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -42,7 +42,8 @@ CREATE TABLE `cliente` (
 --
 
 INSERT INTO `cliente` (`id_cliente`, `nombre_completo`, `email`, `tlf`, `empresa`, `fecha_registro`, `usuario_responsable`) VALUES
-(3, 'Marc', 'marcloool@gmail.com', 1224555552, 'Riot Game', '2025-11-06', 1);
+(9, 'Simó', 'simocli@gmail.com', 123456789, 'Riot Games', '2025-11-18', 1),
+(10, 'Paco', 'paco@gmail.com', 123456789, 'Microsoft', '2025-11-18', 1);
 
 -- --------------------------------------------------------
 
@@ -66,8 +67,10 @@ CREATE TABLE `oportunidad` (
 --
 
 INSERT INTO `oportunidad` (`id_oportunidad`, `id_cliente`, `titulo`, `descripcion`, `valor_estimado`, `estado`, `f_creacion`, `usuario_responsable`) VALUES
-(1, 3, 'Venta de paquete de software ERP a Logística Andina S.A.', 'Durante la reunión del 5 de noviembre, el gerente de operaciones mostró interés en implementar nuestro sistema ERP para optimizar la gestión de inventarios y facturación.', 87.00, 'ganada', '2025-11-07', 1),
-(7, 3, 'Darius', 'Skin legendaria :DDD', 27.00, 'progreso', '2025-11-17', 1);
+(10, 9, 'ERP - Java', 'asd', 90.00, 'perdida', '2025-11-18', 1),
+(11, 9, 'Venta de paquete de software ERP a Logística Andina S.A.', 'asdasd', 50.00, 'progreso', '2025-11-18', 1),
+(12, 9, '123', '123', 123.00, 'progreso', '2025-11-18', 1),
+(13, 10, 'Katarina', 'skin', 50.00, 'progreso', '2025-11-18', 1);
 
 -- --------------------------------------------------------
 
@@ -82,6 +85,15 @@ CREATE TABLE `tareas` (
   `fecha` date NOT NULL DEFAULT current_timestamp(),
   `estado` enum('pendiente','completada') NOT NULL DEFAULT 'pendiente'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `tareas`
+--
+
+INSERT INTO `tareas` (`id_tarea`, `id_oportunidad`, `descripcion`, `fecha`, `estado`) VALUES
+(1, 13, 'Llamada al cliente', '2025-11-18', 'completada'),
+(2, 13, 'Segunda llamada', '2025-11-18', 'pendiente'),
+(3, 10, 'Primera llamada', '2025-11-18', 'completada');
 
 -- --------------------------------------------------------
 
@@ -102,9 +114,11 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id_usuario`, `nombre_completo`, `email`, `contra`, `role`) VALUES
-(1, 'asd', 'a@gmail.com', '$2y$10$oUH8yck6HRkOXk7iyNPxyu3yDbM/.BmxBl5.fZQ/A3/uaSJjfT4/2', 'vendedor'),
+(1, 'asd', 'a@gmail.com', '$2y$10$2.BxkkJRLHct3rfSx2ewy.98kGn1DRLJnsXPHPELiRmW1LMXj2Mza', 'vendedor'),
 (2, 'Marc Hunter', 'b@gmail.com', '$2y$10$SrwSZyA.C/kZ4MZvyokhCu0mK3aPJS3iaEDx9y5IwoDY5kglH337.', 'vendedor'),
-(3, 'Liqiang Yang', 'admin@gmail.com', '$2y$10$UzRI2kluTfWffRRyDw6kS.swoePOSGSEW.Bj4LpYmmPMMnkIrrWLK', 'admin');
+(3, 'Liqiang Yang', 'admin@gmail.com', '$2y$10$UzRI2kluTfWffRRyDw6kS.swoePOSGSEW.Bj4LpYmmPMMnkIrrWLK', 'admin'),
+(7, 'jordi', 'jordi@gmail.com', '$2y$10$76gKDwfOLINBKBYtlzWk0.GsBydffQKokmGQZiOKsc2pmV7pxU8ly', 'vendedor'),
+(8, 'jordiasd', 'asdas@gmail.com', '$2y$10$s/lp5093ugAu06VT2iTJaOtDaR2862GjWmFaRP/rlj8..2ptOX2P6', 'admin');
 
 --
 -- Índices para tablas volcadas
@@ -148,25 +162,25 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `oportunidad`
 --
 ALTER TABLE `oportunidad`
-  MODIFY `id_oportunidad` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_oportunidad` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de la tabla `tareas`
 --
 ALTER TABLE `tareas`
-  MODIFY `id_tarea` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_tarea` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Restricciones para tablas volcadas

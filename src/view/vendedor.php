@@ -12,7 +12,10 @@ if (!isset($_SESSION['id_usuario'])) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Dashboard</title>
-    
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .box { max-width: 800px; margin: 0 auto; }
+    </style>
 </head>
 <body>
     <div class="box">

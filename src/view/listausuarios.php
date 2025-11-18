@@ -1,5 +1,6 @@
 <?php
 
+
 if (!isset($_SESSION['id_usuario']) && !isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header('Location: index.php?action=login');
     exit;
@@ -25,13 +26,20 @@ if (isset($_GET['removeusuario'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Listado de usuarios</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+        th { background: #f4f4f4; }
+        .actions { margin: 12px 0; }
+        a.btn { display:inline-block;padding:8px 12px;border-radius:6px;background:#2563eb;color:#fff;text-decoration:none }
+    </style>
 </head>
 <body>
-    
-</body>
+
     <h2>Listado de usuarios</h2>
 
-    <p><a href="index.php?action=crearusuario">Crear usuario</a></p>
+    <p class="actions"><a class="btn" href="index.php?action=crearusuario">Crear usuario</a></p>
 
     <?php if (empty($usuarios)): ?>
         <p>No hay usuarios para mostrar.</p>
@@ -65,3 +73,6 @@ if (isset($_GET['removeusuario'])) {
         </table>
         <p><a href="index.php?action=admindashboard">Volver al panel de administrador</a></p>
     <?php endif; ?>
+
+</body>
+</html>

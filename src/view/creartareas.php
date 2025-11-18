@@ -2,10 +2,6 @@
 require_once __DIR__ . '/../controller/tareas_controller.php';
 require_once __DIR__ . '/../controller/oportunity_controller.php';
 
-// Asegurar que la sesión está iniciada (index.php normalmente ya la inicia)
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
 
 if (!isset($_SESSION['id_usuario'])) {
     header('Location: index.php?action=login');
@@ -67,7 +63,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Crear tarea</title>
-    
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .form { max-width: 520px; margin: 0 auto; }
+        textarea, input[type="date"], select { width: 100%; padding: 8px; margin: 6px 0 12px; box-sizing: border-box; }
+        .errors { background:#ffe6e6; padding:10px; border:1px solid #ffb3b3; margin-bottom:12px; }
+    </style>
 </head>
 <body>
     <div class="form">
@@ -87,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="hidden" name="id_oportunidad" value="<?php echo htmlspecialchars($oportunidad->getIdOportunidad(), ENT_QUOTES, 'UTF-8'); ?>">
 
             <label>Descripción
-                <textarea name="descripcion" rows="3" maxlength="250" required><?php echo isset($descripcion) ? htmlspecialchars($descripcion, ENT_QUOTES, 'UTF-8') : ''; ?></textarea>
+                <textarea name="descripcion" rows="3" maxlength="250" required style="resize: none"><?php echo isset($descripcion) ? htmlspecialchars($descripcion, ENT_QUOTES, 'UTF-8') : ''; ?></textarea>
             </label>
 
             <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>

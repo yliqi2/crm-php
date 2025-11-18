@@ -1,10 +1,7 @@
 <?php
-// Vista protegida: mostrar información del usuario en sesión
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
 
-if (!isset($_SESSION['id_usuario'])) {
+
+if (!isset($_SESSION['id_usuario'] || !isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header('Location: index.php?action=login');
     exit;
 }
@@ -12,7 +9,7 @@ if (!isset($_SESSION['id_usuario'])) {
 require_once __DIR__ . '/../controller/usuario_controller.php';
 $uc = new UsuarioController();
 
-// gather counts for dashboard
+// obtener los datos para el admin
 $totalClientes = $uc->countClientes();
 $oportunidadesProgreso = $uc->countOportunidadesByState('progreso');
 $oportunidadesGanada = $uc->countOportunidadesByState('ganada');
@@ -26,7 +23,10 @@ $tareasPendientes = $uc->countTareasPendientes();
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Dashboard</title>
-    
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .box { max-width: 800px; margin: 0 auto; }
+    </style>
 </head>
 <body>
     <div class="box">
@@ -38,33 +38,33 @@ $tareasPendientes = $uc->countTareasPendientes();
         <p><a href="index.php?action=logout">Cerrar sesión</a></p>
     </div>
 
-    <div class="stats">
+    <div class="stats" style="max-width:800px;margin:20px auto;padding:10px;border:1px solid #eee;background:#fafafa;">
         <h3>Resumen del sistema</h3>
-        <div>
-            <div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            <div style="flex:1 1 180px;padding:10px;border:1px solid #ddd;background:#fff;text-align:center;">
                 <strong><?php echo (int)$totalClientes; ?></strong>
                 <div>Clientes</div>
             </div>
-            <div>
+            <div style="flex:1 1 180px;padding:10px;border:1px solid #ddd;background:#fff;text-align:center;">
                 <strong><?php echo (int)$oportunidadesProgreso; ?></strong>
                 <div>Oportunidades (Progreso)</div>
             </div>
-            <div>
+            <div style="flex:1 1 180px;padding:10px;border:1px solid #ddd;background:#fff;text-align:center;">
                 <strong><?php echo (int)$oportunidadesGanada; ?></strong>
                 <div>Oportunidades (Ganada)</div>
             </div>
-            <div>
+            <div style="flex:1 1 180px;padding:10px;border:1px solid #ddd;background:#fff;text-align:center;">
                 <strong><?php echo (int)$oportunidadesPerdida; ?></strong>
                 <div>Oportunidades (Perdida)</div>
             </div>
-            <div>
+            <div style="flex:1 1 180px;padding:10px;border:1px solid #ddd;background:#fff;text-align:center;">
                 <strong><?php echo (int)$tareasPendientes; ?></strong>
                 <div>Tareas pendientes</div>
             </div>
         </div>
     </div>
 
-    <div class="actions">
+    <div class="box">
         <h3>Acciones Rápidas</h3>
         <p><a href="index.php?action=listadoclientes">Gestionar clientes</a></p>
         <p><a href="index.php?action=listausuarios">Gestionar usuarios</a></p>

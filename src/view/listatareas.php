@@ -24,7 +24,7 @@ if (isset($_GET['completar'])) {
 }
 
 if ($id_oportunidad === null) {
-	// No se proporcionó id: no hacemos nada
+	//nohay id entonces no se hace nada 
 	exit;
 }
 
@@ -40,7 +40,12 @@ $tareas = $tc->getTareasByOportunidad($id_oportunidad);
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<title>Listado de tareas</title>
-	
+	<style>
+		body { font-family: Arial, sans-serif; padding: 20px; }
+		table { border-collapse: collapse; width: 100%; }
+		th, td { border: 1px solid #ddd; padding: 8px; }
+		th { background: #f4f4f4; }
+	</style>
 </head>
 <body>
 	<h2>Tareas de la oportunidad #<?php echo htmlspecialchars($oportunidad->getTitulo(), ENT_QUOTES, 'UTF-8'); ?></h2>

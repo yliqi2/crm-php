@@ -2,6 +2,10 @@
 
 require_once __DIR__ . '/../controller/oportunity_controller.php';
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 if (!isset($_SESSION['id_usuario'])) {
     header('Location: index.php?action=login');
     exit;
@@ -22,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $titulo = isset($_POST['titulo']) ? trim($_POST['titulo']) : '';
     $descripcion = isset($_POST['descripcion']) ? trim($_POST['descripcion']) : '';
     $valor_estimado = isset($_POST['valor_estimado']) ? (float)$_POST['valor_estimado'] : 0.0;
-    // If the estado wasn't submitted (e.g. select disabled for non-admins), keep the existing value
     $estado = isset($_POST['estado']) ? trim($_POST['estado']) : ($oportunidad->getEstado() ?? '');
     $errors = [];
 
@@ -34,7 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($errors)) {
         $ok = $oc->updateOportunidad($id_oportunidad, $titulo, $descripcion, $valor_estimado, $estado);
         if ($ok) {
-            // use provided idcli when available, otherwise fall back to opportunity's cliente
             header('Location: index.php?action=listadooportunidades&idcli=' . urlencode($return_idcli));
             exit;
         } else {
@@ -54,42 +56,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar oportunidades</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar oportunidades</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .form { max-width: 420px; margin: 0 auto; }
+    input[type="text"], textarea, input[type="number"], select { width: 100%; padding: 8px; margin: 6px 0 12px; box-sizing: border-box; border: 1px solid #dbeafe; border-radius: 6px; }
+    textarea { resize: none; }
+        .errors { background:#ffe6e6; padding:10px; border:1px solid #ffb3b3; margin-bottom:12px; }
+        label { display:block; font-weight:600; }
+        button { background:#2563eb;color:#fff;padding:8px 12px;border-radius:6px;border:0;font-weight:700 }
+        a.back { color:#2563eb; text-decoration:none; display:inline-block; margin-top:10px }
+    </style>
 </head>
 <body>
-    <h2>Editar oportunidad - ID <?php echo htmlspecialchars($id_oportunidad, ENT_QUOTES, 'UTF-8'); ?></h2>
+    <div class="form">
+        <h2>Editar oportunidad - ID <?php echo htmlspecialchars($id_oportunidad, ENT_QUOTES, 'UTF-8'); ?></h2>
 
-    <form method="post">
+        <?php if (!empty($errors)): ?>
+            <div class="errors">
+                <ul>
+                    <?php foreach ($errors as $err): ?>
+                        <li><?php echo htmlspecialchars($err, ENT_QUOTES, 'UTF-8'); ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
 
-        <label>Título:
-            <input type="text" name="titulo" value="<?php echo htmlspecialchars($oportunidad->getTitulo() ?? '', ENT_QUOTES, 'UTF-8'); ?>" required maxlength="100">
-        </label><br><br>
+        <form method="post">
 
-        <label>Descripción:
-            <textarea name="descripcion" required maxlength="250"><?php echo htmlspecialchars($oportunidad->getDescripcion() ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
-        </label><br><br>
+            <label for="titulo">Título
+                <input id="titulo" type="text" name="titulo" value="<?php echo htmlspecialchars($oportunidad->getTitulo() ?? '', ENT_QUOTES, 'UTF-8'); ?>" required maxlength="100">
+            </label>
+            <label for="descripcion">Descripción
+                <textarea id="descripcion" name="descripcion" required maxlength="250" ><?php echo htmlspecialchars($oportunidad->getDescripcion() ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
+            </label>
 
-        <label>Valor Estimado:
-            <input type="number" step="0.01" name="valor_estimado" value="<?php echo htmlspecialchars($oportunidad->getValor() ?? '', ENT_QUOTES, 'UTF-8'); ?>" required>
-        </label><br><br>
+            <label for="valor_estimado">Valor estimado
+                <input id="valor_estimado" type="number" step="0.01" name="valor_estimado" value="<?php echo htmlspecialchars($oportunidad->getValor() ?? '', ENT_QUOTES, 'UTF-8'); ?>" required>
+            </label>
+            <label for="estado">Estado
+                <?php
+                    $currentEstado = $oportunidad->getEstado() ?? '';
+                    $estados = ['progreso' => 'progreso', 'ganada' => 'ganada', 'perdida' => 'perdida'];
+                ?>
+                <select id="estado" name="estado" required <?php echo $canEditEstado ? '' : 'disabled'; ?>>
+                    <?php foreach ($estados as $val => $label): ?>
+                        <option value="<?php echo htmlspecialchars($val, ENT_QUOTES, 'UTF-8'); ?>" <?php echo ((string)$val === (string)$currentEstado) ? 'selected' : ''; ?>><?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8'); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </label>
 
-        <label>Estado:
-            <?php
-                $currentEstado = $oportunidad->getEstado() ?? '';
-                $estados = ['progreso' => 'progreso', 'ganada' => 'ganada', 'perdida' => 'perdida'];
-            ?>
-            <select name="estado" required <?php echo $canEditEstado ? '' : 'disabled'; ?>>
-                <?php foreach ($estados as $val => $label): ?>
-                    <option value="<?php echo htmlspecialchars($val, ENT_QUOTES, 'UTF-8'); ?>" <?php echo ((string)$val === (string)$currentEstado) ? 'selected' : ''; ?>>
-                        <?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8'); ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </label><br><br>
+            <div style="margin-top:8px">
+                <button type="submit">Guardar cambios</button>
+                <a class="back" href="index.php?action=listadooportunidades&idcli=<?php echo urlencode($return_idcli); ?>">Volver al listado de oportunidades</a>
+            </div>
 
-        <button type="submit">Guardar cambios</button>
-
-    </form>
-    <p><a href="index.php?action=listadooportunidades&idcli=<?php echo urlencode($return_idcli); ?>">Volver al listado de oportunidades</a></p>
+        </form>
+    </div>
 
 </body>
 </html>

@@ -12,6 +12,8 @@ class TareasController {
         $this->usuarioController = new UsuarioController();
         $this->oportunityController = new OportunityController();
     }
+
+    //crea los objetos de tareas
     public function crearTareas($res) {
         $tareas = [];
         if ($res && $res->num_rows > 0) {
@@ -29,6 +31,7 @@ class TareasController {
         return $tareas;
     }
 
+    //hace el insert a la base de datos cuando se crea una tarea en el creartareas
     public function insertTarea($id_oportunidad, $descripcion, $estado = 'pendiente') {
         $id_oportunidad = (int) $id_oportunidad;
         $id_usuario = isset($_SESSION['id_usuario']) ? (int)$_SESSION['id_usuario'] : null;
@@ -66,6 +69,7 @@ class TareasController {
         return $success;
     }
 
+    //devuelve las tareas de una oportunidad
     public function getTareasByOportunidad($id_oportunidad) {
         $id_oportunidad = (int) $id_oportunidad;
         $id_usuario = isset($_SESSION['id_usuario']) ? (int)$_SESSION['id_usuario'] : null;
@@ -94,7 +98,7 @@ class TareasController {
 
         return $this->crearTareas($res);
     }
-
+    //funcion para actualizar el estado de la tarea a completada
     public function completarTarea($id_tarea) {
         $id_tarea = (int) $id_tarea;
         $id_usuario = isset($_SESSION['id_usuario']) ? (int)$_SESSION['id_usuario'] : null;

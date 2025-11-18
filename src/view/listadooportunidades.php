@@ -48,7 +48,12 @@ if (isset($_GET['delete'])) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Oportunidades</title>
-    
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+        th { background: #f4f4f4; }
+    </style>
 </head>
 <body>
     <h2>Listado de Oportunidades</h2>
