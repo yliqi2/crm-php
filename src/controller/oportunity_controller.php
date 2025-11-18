@@ -40,10 +40,7 @@ class OportunityController {
         $id_usuario = (int) $_SESSION['id_usuario'];
         $id_cliente = (int) $id_cliente;
         $conexion = $this->db->getConnection();
-
-        // Preferir el usuario_responsable del cliente (si existe) para la nueva oportunidad.
-        // Esto evita que un admin que crea la oportunidad quede como responsable.
-        $usuario_responsable = $id_usuario; // fallback
+        $usuario_responsable = $id_usuario; 
         $respStmt = $conexion->prepare("SELECT usuario_responsable FROM cliente WHERE id_cliente = ? LIMIT 1");
         if ($respStmt) {
             $respStmt->bind_param('i', $id_cliente);
@@ -138,7 +135,6 @@ class OportunityController {
             if (!$stmt) {
                 return false;
             }
-            // types: string, string, double, string (estado), int(id_oportunidad)
             $stmt->bind_param('ssdsi', $titulo, $descripcion, $valor_estimado, $estado, $id_oportunidad);
 
 
@@ -147,7 +143,6 @@ class OportunityController {
             if (!$stmt) {
                 return false;
             }
-            // types: string, string, double, string (estado), int(id_oportunidad), int(id_usuario)
             $stmt->bind_param('ssdsii', $titulo, $descripcion, $valor_estimado, $estado, $id_oportunidad, $id_usuario);
         }
 
@@ -185,6 +180,59 @@ class OportunityController {
         return $success;
     }
 
+
+    // en caso de que solo haya un usuario se filtra solo por estado
+    public function filtrarEstado($estado) {
+        $id_usuario = (int) $_SESSION['id_usuario'];
+        $estado = $estado;
+
+        $conexion = $this->db->getConnection();
+
+        if ($this->usuarioController->isAdmin($id_usuario)) {
+            $stmt = $conexion->prepare("SELECT * FROM oportunidad WHERE estado = ?");
+            $stmt->bind_param('s', $estado);
+        } else {
+            $stmt = $conexion->prepare("SELECT o.* FROM oportunidad o JOIN cliente c ON o.id_cliente = c.id_cliente WHERE o.estado = ? AND c.usuario_responsable = ?");
+            $stmt->bind_param('si', $estado, $id_usuario);
+        }
+
+        if (!$stmt) {
+            return [];
+        }
+
+        $stmt->execute();
+        $res = $stmt->get_result();
+        $stmt->close();
+        return $this->crearOportunidades($res);
+    }
+
+    // en caso de que haya más de un cliente con el mismo estado solo se muestran las oportunidades del cliente indicado
+    public function filtrarClienteEstado($id_cliente, $estado) {
+        $id_usuario = (int) $_SESSION['id_usuario'];
+        $id_cliente = (int) $id_cliente;
+        $estado = (string) $estado;
+
+        $conexion = $this->db->getConnection();
+
+        if ($this->usuarioController->isAdmin($id_usuario)) {
+            $stmt = $conexion->prepare("SELECT * FROM oportunidad WHERE id_cliente = ? AND estado = ?");
+            $stmt->bind_param('is', $id_cliente, $estado);
+        } else {
+            $stmt = $conexion->prepare("SELECT o.* FROM oportunidad o JOIN cliente c ON o.id_cliente = c.id_cliente WHERE o.id_cliente = ? AND o.estado = ? AND c.usuario_responsable = ?");
+            $stmt->bind_param('isi', $id_cliente, $estado, $id_usuario);
+        }
+
+        if (!$stmt) {
+            return [];
+        }
+
+        $stmt->execute();
+        $res = $stmt->get_result();
+        $stmt->close();
+        return $this->crearOportunidades($res);
+    }
+
+    
 }
 
 

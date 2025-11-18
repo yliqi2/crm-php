@@ -260,5 +260,62 @@ class UsuarioController {
         return false;
     }
 
+    //funcion que cuenta los clientes
+    public function countClientes() {
+        $conexion = $this->db->getConnection();
+        $stmt = $conexion->prepare("SELECT COUNT(*) AS total FROM cliente");
+        if (!$stmt) {
+            return 0;
+        }
+        $stmt->execute();
+        $res = $stmt->get_result();
+        if ($res && $res->num_rows === 1) {
+            $row = $res->fetch_assoc();
+            $stmt->close();
+            return (int)$row['total'];
+        }
+        $stmt->close();
+        return 0;
+    }
+
+    //funcion que cuenta las oportunidades por estado 
+    public function countOportunidadesByState($estado) {
+        $conexion = $this->db->getConnection();
+        $stmt = $conexion->prepare("SELECT COUNT(*) AS total FROM oportunidad WHERE estado = ?");
+        if (!$stmt) {
+            return 0;
+        }
+        $stmt->bind_param('s', $estado);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        if ($res && $res->num_rows === 1) {
+            $row = $res->fetch_assoc();
+            $stmt->close();
+            return (int)$row['total'];
+        }
+        $stmt->close();
+        return 0;
+    }
+
+    //funcion que cuenta las tareas pendientes
+    public function countTareasPendientes() {
+        $conexion = $this->db->getConnection();
+        $stmt = $conexion->prepare("SELECT COUNT(*) AS total FROM tareas WHERE estado = 'pendiente'");
+        if (!$stmt) {
+            return 0;
+        }
+        $stmt->execute();
+        $res = $stmt->get_result();
+        if ($res && $res->num_rows === 1) {
+            $row = $res->fetch_assoc();
+            $stmt->close();
+            return (int)$row['total'];
+        }
+        $stmt->close();
+        return 0;
+    }
+
+    
+
 }
 ?>

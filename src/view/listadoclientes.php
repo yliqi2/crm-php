@@ -43,12 +43,7 @@ if ($searchCliente !== '') {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Listado de clientes</title>
-    <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        table { border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid #ddd; padding: 8px; }
-        th { background: #f4f4f4; }
-    </style>
+    
 </head>
 <body>
     <h2>Mis clientes</h2>
@@ -57,7 +52,7 @@ if ($searchCliente !== '') {
         <input type="text" name="search" placeholder="Buscar clientes..." value="<?php echo htmlspecialchars($searchCliente, ENT_QUOTES, 'UTF-8'); ?>" />
         <button type="submit">Buscar</button>
         <?php if ($searchCliente !== ''): ?>
-            <a href="index.php?action=listadoclientes" style="margin-left:10px;">Reset</a>
+            <a href="index.php?action=listadoclientes">Reset</a>
         <?php endif; ?>
     </form>
     <br>
@@ -65,13 +60,13 @@ if ($searchCliente !== '') {
         <input type="text" name="searchEmpresa" placeholder="Buscar empresa..." value="<?php echo htmlspecialchars($searchEmpresa, ENT_QUOTES, 'UTF-8'); ?>" />
         <button type="submit">Buscar</button>
         <?php if ($searchEmpresa !== ''): ?>
-            <a href="index.php?action=listadoclientes" style="margin-left:10px;">Reset</a>
+            <a href="index.php?action=listadoclientes">Reset</a>
         <?php endif; ?>
     </form>
 
     <?php if ($_GET['updated'] ?? false): ?>
         <br>
-        <p style="color:green;">Cliente actualizado correctamente.</p>
+        <p>Cliente actualizado correctamente.</p>
         <br>
     <?php endif; ?>
 

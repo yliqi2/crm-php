@@ -57,13 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Editar cliente</title>
-    <style>
-        body{font-family:Arial, sans-serif;padding:20px}
-        .form{max-width:520px}
-        input[type=text], input[type=email]{width:100%;padding:8px;margin:6px 0}
-        .errors{background:#ffe6e6;padding:10px;border:1px solid #ffb3b3;margin-bottom:12px}
-        .success{background:#e6ffea;padding:10px;border:1px solid #b3ffcf;margin-bottom:12px}
-    </style>
+    
 </head>
 <body>
     <div class="form">

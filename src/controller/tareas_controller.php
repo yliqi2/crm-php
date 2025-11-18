@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../model/tarea.php';
+require_once __DIR__ . '/../model/tareas.php';
 require_once __DIR__ . '/../model/db.php';
 require_once __DIR__ . '/../controller/usuario_controller.php';
 require_once __DIR__ . '/../controller/oportunity_controller.php';
@@ -26,6 +26,44 @@ class TareasController {
                 $tareas[] = $tarea;
             }
         }
+        return $tareas;
+    }
+
+    public function insertTarea($id_oportunidad, $descripcion, $estado = 'pendiente') {
+        $id_oportunidad = (int) $id_oportunidad;
+        $id_usuario = isset($_SESSION['id_usuario']) ? (int)$_SESSION['id_usuario'] : null;
+
+        if ($id_usuario === null) {
+            return false;
+        }
+        // Validar existencia de oportunidad y permisos
+        $oportunidad = $this->oportunityController->getOportunidadById($id_oportunidad);
+        if (!$oportunidad) {
+            return false;
+        }
+
+        if (!$this->usuarioController->isAdmin($id_usuario) && $oportunidad->getUsuarioResponsable() !== $id_usuario) {
+            return false;
+        }
+
+        // Si el usuario no es admin, ignorar el estado enviado y forzar 'pendiente'.
+        $isAdmin = $this->usuarioController->isAdmin($id_usuario);
+        if ($isAdmin) {
+            // Normalizar estado solo si es admin
+            $estado = ($estado === 'completada') ? 'completada' : 'pendiente';
+        } else {
+            $estado = 'pendiente';
+        }
+
+        $conexion = $this->db->getConnection();
+        $stmt = $conexion->prepare("INSERT INTO tareas (id_oportunidad, descripcion, estado) VALUES (?, ?, ?)");
+        if (!$stmt) {
+            return false;
+        }
+        $stmt->bind_param('iss', $id_oportunidad, $descripcion, $estado);
+        $success = $stmt->execute();
+        $stmt->close();
+        return $success;
     }
 
     public function getTareasByOportunidad($id_oportunidad) {
@@ -56,6 +94,42 @@ class TareasController {
 
         return $this->crearTareas($res);
     }
+
+    public function completarTarea($id_tarea) {
+        $id_tarea = (int) $id_tarea;
+        $id_usuario = isset($_SESSION['id_usuario']) ? (int)$_SESSION['id_usuario'] : null;
+
+        if ($id_usuario === null) {
+            return false;
+        }
+
+        // Obtener la tarea para validar permisos
+        $conexion = $this->db->getConnection();
+        $stmt = $conexion->prepare("SELECT t.*, o.usuario_responsable FROM tareas t JOIN oportunidad o ON t.id_oportunidad = o.id_oportunidad WHERE t.id_tarea = ? LIMIT 1");
+        if (!$stmt) {
+            return false;
+        }
+        $stmt->bind_param('i', $id_tarea);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        $stmt->close();
+
+        if ($res && $res->num_rows === 1) {
+            $row = $res->fetch_assoc();
+
+            $stmtUpdate = $conexion->prepare("UPDATE tareas SET estado = 'completada' WHERE id_tarea = ?");
+            if (!$stmtUpdate) {
+                return false;
+            }
+            $stmtUpdate->bind_param('i', $id_tarea);
+            $success = $stmtUpdate->execute();
+            $stmtUpdate->close();
+            return $success;
+        }
+
+        return false;
+    }
+
 }
 
 

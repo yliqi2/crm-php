@@ -201,4 +201,28 @@ class ClientController {
         return $success;
     }
 
+    // devuelve un cliente por id
+    public function getCliente($id_cliente) {
+        $id_cliente = (int) $id_cliente;
+
+        $conexion = $this->db->getConnection();
+
+        $stmt = $conexion->prepare("SELECT * FROM cliente WHERE id_cliente = ? LIMIT 1");
+        if (!$stmt) {
+            return null;
+        }
+        $stmt->bind_param('i', $id_cliente);
+        $stmt->execute();
+
+        $res = $stmt->get_result();
+        if ($res && $res->num_rows === 1) {
+            $stmt->close();
+            return $this->crearClientes($res)[0] ?? null;
+        }
+        $stmt->close();
+        return null;
+
+    }
+    
+
 }
