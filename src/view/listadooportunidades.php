@@ -38,8 +38,6 @@ if (isset($_GET['delete'])) {
         table { border-collapse: collapse; width: 100%; }
         th, td { border: 1px solid #ddd; padding: 8px; }
         th { background: #f4f4f4; }
-        .btn-edit { display:inline-block; padding:6px 10px; background:#007bff; color:#fff; text-decoration:none; border-radius:4px; }
-        .btn-edit:hover { background:#0056b3; }
     </style>
 </head>
 <body>
@@ -60,7 +58,8 @@ if (isset($_GET['delete'])) {
                     <th>Valor Estimado</th>
                     <th>Estado</th>
                     <th>Fecha de Creación</th>
-                    <th>Usuario Responsable</th>
+                    <th>Usuario responsable</th>
+                    <th colspan="2">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -73,8 +72,11 @@ if (isset($_GET['delete'])) {
                         <td><?php echo htmlspecialchars($oportunidad->getValor() ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
                         <td><?php echo htmlspecialchars($oportunidad->getEstado() ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
                         <td><?php echo htmlspecialchars($oportunidad->getFCreacion() ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
+                        <td><?php echo htmlspecialchars($oportunidad->getUsuarioResponsable() ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
                         <td>
                             <a class="btn-edit" href="index.php?action=editaroportunidad&idcli=<?php echo urlencode($id_cliente); ?>&id=<?php echo urlencode($oportunidad->getIdOportunidad()); ?>">Editar</a>
+                        </td>
+                        <td>
                             <a class="btn-edit" href="index.php?action=listadooportunidades&idcli=<?php echo urlencode($id_cliente); ?>&delete=<?php echo urlencode($oportunidad->getIdOportunidad()); ?>">Eliminar</a>
                         </td>
                     </tr>

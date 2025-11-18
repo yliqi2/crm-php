@@ -39,14 +39,31 @@ class OportunityController {
     public function insertOportunity($id_cliente, $titulo, $descripcion, $valor_estimado) {
         $id_usuario = (int) $_SESSION['id_usuario'];
         $id_cliente = (int) $id_cliente;
-
         $conexion = $this->db->getConnection();
+
+        // Preferir el usuario_responsable del cliente (si existe) para la nueva oportunidad.
+        // Esto evita que un admin que crea la oportunidad quede como responsable.
+        $usuario_responsable = $id_usuario; // fallback
+        $respStmt = $conexion->prepare("SELECT usuario_responsable FROM cliente WHERE id_cliente = ? LIMIT 1");
+        if ($respStmt) {
+            $respStmt->bind_param('i', $id_cliente);
+            $respStmt->execute();
+            $res = $respStmt->get_result();
+            if ($res && $res->num_rows === 1) {
+                $row = $res->fetch_assoc();
+                if (!empty($row['usuario_responsable'])) {
+                    $usuario_responsable = (int)$row['usuario_responsable'];
+                }
+            }
+            $respStmt->close();
+        }
 
         $stmt = $conexion->prepare("INSERT INTO oportunidad (id_cliente, titulo, descripcion, valor_estimado, usuario_responsable) VALUES (?, ?, ?, ?, ?)");
         if (!$stmt) {
             return false;
         }
-        $stmt->bind_param('isssi', $id_cliente, $titulo, $descripcion, $valor_estimado, $id_usuario);
+        // types: int, string, string, double, int
+        $stmt->bind_param('issdi', $id_cliente, $titulo, $descripcion, $valor_estimado, $usuario_responsable);
         $success = $stmt->execute();
         $stmt->close();
         return $success;
@@ -126,13 +143,14 @@ class OportunityController {
 
 
         } else {
-            $stmt = $conexion->prepare("UPDATE oportunidad o JOIN cliente c ON o.id_cliente = c.id_cliente SET o.titulo = ?, o.descripcion = ?, o.valor_estimado = ?, o.estado = ? WHERE o.id_oportunidad = ? AND c.usuario_responsable = ?");
-             $stmt->bind_param('ssdsii', $titulo, $descripcion, $valor_estimado, $estado, $id_oportunidad, $id_usuario);
+            $stmt = $conexion->prepare("UPDATE oportunidad SET titulo = ?, descripcion = ?, valor_estimado = ?, estado = ? WHERE id_oportunidad = ? AND usuario_responsable = ?");
+            if (!$stmt) {
+                return false;
+            }
+            // types: string, string, double, string (estado), int(id_oportunidad), int(id_usuario)
+            $stmt->bind_param('ssdsii', $titulo, $descripcion, $valor_estimado, $estado, $id_oportunidad, $id_usuario);
         }
 
-        if (!$stmt) {
-            return false;
-        }
         $success = $stmt->execute();
         $stmt->close();
 

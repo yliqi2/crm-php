@@ -109,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <button type="submit">Registrarse</button>
             </form>
         <?php endif; ?>
-
+                <p>¿Ya tienes cuenta? <a href="index.php?action=login">Inicia sesión</a></p>
     </div>
 </body>
 </html>

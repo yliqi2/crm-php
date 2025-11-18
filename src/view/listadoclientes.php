@@ -45,8 +45,6 @@ $clientes = $cc->getClientesForOwner();
         table { border-collapse: collapse; width: 100%; }
         th, td { border: 1px solid #ddd; padding: 8px; }
         th { background: #f4f4f4; }
-        .btn-edit { display:inline-block; padding:6px 10px; background:#007bff; color:#fff; text-decoration:none; border-radius:4px; }
-        .btn-edit:hover { background:#0056b3; }
     </style>
 </head>
 <body>
@@ -89,7 +87,11 @@ $clientes = $cc->getClientesForOwner();
                     <th>Teléfono</th>
                     <th>Empresa</th>
                     <th>Fecha registro</th>
-                    <th>Acciones</th>
+                    <?php if ($uc->isAdmin((int) $_SESSION['id_usuario'])): ?>
+                        <th colspan="3">Acciones</th>
+                    <?php else: ?>
+                        <th >Acciones</th>
+                    <?php endif; ?>
                 </tr>
             </thead>
             <tbody>
@@ -102,12 +104,16 @@ $clientes = $cc->getClientesForOwner();
                         <td><?php echo htmlspecialchars($c->getEmpresa(), ENT_QUOTES, 'UTF-8'); ?></td>
                         <td><?php echo htmlspecialchars($c->getFechaCreacion(), ENT_QUOTES, 'UTF-8'); ?></td>
                         <td>
-                            <?php if ($uc->isAdmin((int) $_SESSION['id_usuario'])): ?>
-                                <a class="btn-edit" href="index.php?action=editarclientes&id=<?php echo urlencode($c->getIdCliente()); ?>">Editar</a>
-                                <a class="btn-edit" href="index.php?action=listadoclientes&remove=<?php echo urlencode($c->getIdCliente()); ?>">Eliminar</a>
-                            <?php endif; ?>
-                            <a class="btn-edit" href="index.php?action=listadooportunidades&idcli=<?php echo urlencode($c->getIdCliente()); ?>">Ver Oportunidades</a>
+                            <a href="index.php?action=listadooportunidades&idcli=<?php echo urlencode($c->getIdCliente()); ?>">Ver Oportunidades</a>
                         </td>
+                        <?php if ($uc->isAdmin((int) $_SESSION['id_usuario'])): ?>
+                            <td>
+                            <a href="index.php?action=editarclientes&id=<?php echo urlencode($c->getIdCliente()); ?>">Editar</a>
+                            </td>
+                            <td>
+                            <a href="index.php?action=listadoclientes&remove=<?php echo urlencode($c->getIdCliente()); ?>">Eliminar</a>
+                            </td>
+                        <?php endif; ?>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

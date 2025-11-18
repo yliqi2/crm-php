@@ -11,11 +11,6 @@ $oc = new OportunityController();
 
 $id_oportunidad = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
-if ($id_oportunidad <= 0) {
-    header('Location: index.php?action=oportunidades');
-    exit;
-}
-
 $oportunidad = $oc->getOportunidadById($id_oportunidad);
 
 $return_idcli = isset($_GET['idcli']) ? (int)$_GET['idcli'] : (method_exists($oportunidad, 'getIdCliente') ? $oportunidad->getIdCliente() : 0);
@@ -27,7 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $titulo = isset($_POST['titulo']) ? trim($_POST['titulo']) : '';
     $descripcion = isset($_POST['descripcion']) ? trim($_POST['descripcion']) : '';
     $valor_estimado = isset($_POST['valor_estimado']) ? (float)$_POST['valor_estimado'] : 0.0;
-    $estado = isset($_POST['estado']) ? trim($_POST['estado']) : '';
+    // If the estado wasn't submitted (e.g. select disabled for non-admins), keep the existing value
+    $estado = isset($_POST['estado']) ? trim($_POST['estado']) : ($oportunidad->getEstado() ?? '');
     $errors = [];
 
     if ($titulo === '') $errors[] = 'El título es obligatorio.';
@@ -53,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
